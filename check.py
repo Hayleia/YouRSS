@@ -14,14 +14,13 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 # read configuration
-if os.path.exists(confName):
-	if not os.path.isfile(confName):
-		print('CONF PATH IS NOT A FILE')
-		exit()
-	with open(confName) as json_file:
-		conf = json.load(json_file)
-		userIds = conf['users']
-		channels = conf['channels']
+if not os.path.exists(confName) or not os.path.isfile(confName):
+	print('CONF PATH IS NOT A FILE')
+	exit()
+with open(confName) as json_file:
+	conf = json.load(json_file)
+	userIds = conf['users']
+	channels = conf['channels']
 
 # read a json that describes what the last video id is for every channel in the list
 latestVideos = {}
