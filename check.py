@@ -20,7 +20,7 @@ if not os.path.exists(confName) or not os.path.isfile(confName):
 with open(confName) as json_file:
 	conf = json.load(json_file)
 	userIds = conf['users']
-	channels = conf['channels']
+	channels = list(filter(lambda x: isinstance(x, list), conf['channels']))
 
 # read a json that describes what the last video id is for every channel in the list
 latestVideos = {}
