@@ -3,12 +3,17 @@
 import os
 import json
 from requests import get
+from datetime import datetime
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from discord.ext import commands
 
 jsonName = 'latestVideos.json'
 confName = 'config.json'
+
+dateTimeObj = datetime.now()
+print()
+print(f'###### PYTHON STARTING {str(dateTimeObj)}')
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -64,12 +69,18 @@ if len(newVideos) != 0:
 			latestVideos[channelId] = videoId
 			for userId in userIds:
 				if userId == 0: continue
-				user = bot.get_user(userId)
-				channel = await getDmChannel(user)
-				await channel.send(f'New video from {channelName} -- {videoTitle}: <https://youtu.be/{videoId}>')
+				try:
+					user = await bot.fetch_user(userId)
+					channel = await getDmChannel(user)
+					await channel.send(f'New video from {channelName} -- {videoTitle}: <https://youtu.be/{videoId}>')
+				except:
+					# don't crash too much, the bot needs to close
+					print(f'failed with user {userId}')
 		await bot.close()
 
 	bot.run(TOKEN)
 
 	with open(jsonName, 'w') as outfile:
 		json.dump(latestVideos, outfile)
+
+print(f'###### PYTHON ENDING {str(dateTimeObj)}')
